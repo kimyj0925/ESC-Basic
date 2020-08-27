@@ -36,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton call;
     private ImageButton backspace;
 
+    //전화번호 검색
+    private TextView name;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpUI() {
+        // 전화번호 검색
+        name = findViewById(R.id.main_tv_name);
         addContact = findViewById(R.id.main_ibtn_add);
         contact = findViewById(R.id.main_ibtn_contact);
         phoneNum = findViewById(R.id.main_tv_phone);
@@ -92,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent addIntent = new Intent(MainActivity.this, AddEditActivity.class);
+                addIntent.putExtra("phone_num", phoneNum.getText().toString());
+                addIntent.putExtra("add_edit","add");
                 startActivity(addIntent);
             }
         });
@@ -143,9 +150,8 @@ public class MainActivity extends AppCompatActivity {
                         message.setVisibility(View.GONE);
                         backspace.setVisibility(View.GONE);
                     }
-
-
                 }
+                findPhone();
             }
         });
 
@@ -156,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
 
                 message.setVisibility(View.GONE);
                 backspace.setVisibility(View.GONE);
+                findPhone();
                 return true;
             }
         });
@@ -170,10 +177,25 @@ public class MainActivity extends AppCompatActivity {
 
                 message.setVisibility(View.VISIBLE);
                 backspace.setVisibility(View.VISIBLE);
+                findPhone();
             }
         });
     }
 
+    private void findPhone() {
+        String find = phoneNum.getText().toString().replaceAll("-", "");
+        name.setText("");
+
+        if (phoneNum.getText().length() == 0) {
+            name.setText("");
+        } else {
+            for (int i = 0; i < DummyData.contacts.size(); i++) {
+                if (DummyData.contacts.get(i).getPhone().replaceAll("-", "").contains(find)) {
+                    name.setText(name.getText() + " " + DummyData.contacts.get(i).getName());
+                }
+            }
+        }
+    }
     private int getResourceID(final String resName, final String resType, final Context ctx) {
         final int ResourceID =
                 ctx.getResources().getIdentifier(resName, resType, ctx.getApplicationInfo().packageName);

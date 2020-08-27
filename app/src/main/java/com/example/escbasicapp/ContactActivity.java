@@ -48,6 +48,13 @@ public class ContactActivity extends AppCompatActivity {
         setInfo(currentPage);
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        setInfo(currentPage);
+    }
+
     private void setUpUI() {
         toolbar = findViewById(R.id.contact_toolbar);
         avatar = findViewById(R.id.contact_iv_avatar);
@@ -108,7 +115,10 @@ public class ContactActivity extends AppCompatActivity {
                 break;
 
             case R.id.menu_contact_edit:
-                //TODO: 수정
+                Intent editIntent = new Intent(ContactActivity.this, AddEditActivity.class);
+                editIntent.putExtra("add_edit", "edit");
+                editIntent.putExtra("position", currentPage);
+                startActivity(editIntent);
                 break;
 
             case R.id.menu_contact_message:
@@ -121,7 +131,7 @@ public class ContactActivity extends AppCompatActivity {
                 DummyData.contacts.remove(currentPage);
 
                 if (DummyData.contacts.size() == 0){
-                    Toast.makeText(ContactActivity.this, "보여줄 연락처가 없습니 다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ContactActivity.this, "보여줄 연락처가 없습니다.", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
                     if (currentPage != 0) {
